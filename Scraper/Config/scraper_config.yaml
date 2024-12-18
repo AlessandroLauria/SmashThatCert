@@ -1,0 +1,14 @@
+ingest_questions:
+  database: smash_that_cert
+  question_table: exams_questions
+  search_engine_url: https://www.google.com/search
+  exam_name: GCP Professional Cloud Developer
+  first_question_number: '1'
+  last_question_number: '3'
+
+question_info_extractor:
+  exam_title_xpath:  /html/body/div[2]/div/div[3]/div/div/h1 #/html/body/div[2]/div/div[4]/div/div/h1
+  question_number_xpath: /html/body/div[2]/div/div[4]/div/div[1]/div[1]/div #/html/body/div[2]/div/div[5]/div/div[1]/div[1]/div
+  question_xpath: /html/body/div[2]/div/div[4]/div/div[1]/div[2]/p #/html/body/div[2]/div/div[5]/div/div[1]/div[2]/p
+  options_xpath: /html/body/div[2]/div/div[4]/div/div[1]/div[2]/div[2]/ul #/html/body/div[2]/div/div[5]/div/div[1]/div[2]/div[2]/ul
+  show_answare_btn_xpath: /html/body/div[2]/div/div[4]/div/div[1]/div[2]/a[1] #/html/body/div[2]/div/div[5]/div/div[1]/div[2]/a[1]

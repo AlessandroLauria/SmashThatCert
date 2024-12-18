@@ -1,0 +1,25 @@
+mysql:
+  user:
+  password:
+  host: 217.160.251.115
+  database: smash_that_cert
+  question_table: exams_questions
+
+query:
+  ingest_question_query: "REPLACE INTO {table_name}(exam_name, question_number, question_text, question_options,most_voted, link) VALUES('{exam_name}',{question_number},'{question_text}','{question_options}','{most_voted}', '{link}')"
+  read_questions_query: >
+    SELECT exam_name, question_number, question_text, question_options, most_voted, link
+    FROM {table_name}
+    WHERE most_voted != '-1' AND TRIM(exam_name) = '{exam_name}'
+    ORDER BY question_number
+  create_question_table_query: >
+    CREATE TABLE smash_that_cert.exams_questions (
+        exam_name varchar(255),
+        question_number int,
+        question_text text,
+    	question_options text,
+    	most_voted varchar(10),
+        link varchar(500),
+    	ingestion_dt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    	PRIMARY KEY (exam_name, question_number, link)
+    );
