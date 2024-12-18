@@ -1,6 +1,6 @@
 mysql:
   user:
-  password:
+  password: 
   host: 217.160.251.115
   database: smash_that_cert
   question_table: exams_questions
