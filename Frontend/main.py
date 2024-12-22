@@ -1,17 +1,21 @@
 import streamlit as st
-from Home import Home
-from ExercisePage import ExamSimulator, StandardExercise
+from pages.Home import Home
+from pages.ExercisePage import ExamSimulator, StandardExercise
 
 
-if not Home.have_to_hide():
-    Home.homepage()
+#if not Home.have_to_hide():
+#    Home.homepage()
 
-if Home.unique_button_clicked == 0:
-    if ExamSimulator.exam_selected is None:
-        ExamSimulator.set_exam(Home.exams_selected)
-    ExamSimulator.homepage()
+st.switch_page("pages/Home.py")
 
-if Home.unique_button_clicked == 1:
-    if StandardExercise.exam_selected is None:
-        StandardExercise.set_exam(Home.exams_selected)
-    StandardExercise.homepage()
+# if Home.unique_button_clicked == 0:
+#     if ExamSimulator.exam_selected is None:
+#         exam = Home.exams_selected.split("-")[0].strip()
+#         ExamSimulator.set_exam(exam)
+#     ExamSimulator.homepage()
+#
+# if Home.unique_button_clicked == 1:
+#     if StandardExercise.exam_selected is None:
+#         exam = Home.exams_selected.split("-")[0].strip()
+#         StandardExercise.set_exam(exam)
+#     StandardExercise.homepage()

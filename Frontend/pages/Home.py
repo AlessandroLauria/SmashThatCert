@@ -1,4 +1,8 @@
 import streamlit as st
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).parent.parent.parent))
+from Backend.ExamHandler import ExamMetadata
 
 title = "SMASH THAT :blue[CERT]"
 search_label = "Select your exam"
@@ -10,7 +14,7 @@ class Home():
     hide = False
     unique_button_clicked = -1
 
-    exams_list: list = ["GCP Professional Cloud Developer", "exam2", "exam3"]
+    exams_list: list = ExamMetadata.get_exams_list() #["GCP Professional Cloud Developer", "exam2", "exam3"]
     exams_selected: str = None
 
     @classmethod
@@ -51,12 +55,22 @@ class Home():
             exercises_clicked = cls._standard_exercises_button()
 
             if exam_clicked:
-                cls.hide_page(True)
-                cls.unique_button_clicked = 0
-                st.rerun()
+                #cls.hide_page(True)
+                #cls.unique_button_clicked = 0
+                #st.rerun()
+                st.session_state["exams_selected"] = cls.exams_selected
+                st.session_state["exercise_page_type"] = "ExamSimulator"
+                st.switch_page("pages/ExercisePage.py")
 
             elif exercises_clicked:
-                cls.hide_page(True)
-                cls.unique_button_clicked = 1
-                st.rerun()
+                #cls.hide_page(True)
+                #cls.unique_button_clicked = 1
+                #st.rerun()
+                st.session_state["exams_selected"] = cls.exams_selected
+                st.session_state["exercise_page_type"] = "StandardExercise"
+                st.switch_page("pages/ExercisePage.py")
+
+
+st.cache_resource.clear()
+Home.homepage()
 

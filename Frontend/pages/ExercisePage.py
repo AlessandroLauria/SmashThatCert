@@ -1,7 +1,7 @@
 import streamlit as st
 import sys
 from pathlib import Path
-sys.path.append(str(Path(__file__).parent.parent))
+sys.path.append(str(Path(__file__).parent.parent.parent))
 from Backend.ExamHandler import ExamHandler
 
 question_number_text = "Question #"
@@ -9,6 +9,7 @@ previous_button_text = "Previous"
 next_button_text = "Next"
 quit_button_text = "Quit"
 submit_exam_text = "Submit Exam"
+show_correct_answare_text = "Show Correct Answare"
 
 class ExcercisePage():
 
@@ -31,6 +32,7 @@ class ExcercisePage():
 
     @classmethod
     def set_exam(cls, exam):
+        print("Setting exam")
         cls.exam_selected = exam
 
     @classmethod
@@ -70,18 +72,30 @@ class ExcercisePage():
             cls._change_question(-1)
         if cls.middle_1.button(next_button_text, use_container_width=True, type="primary"):
             cls._change_question(1)
+        if cls.middle3.button(quit_button_text, use_container_width=True, type="tertiary"):
+            st.switch_page("pages/Home.py")
 
     @classmethod
     def homepage(cls):
+        if cls.exam_selected is None:
+            cls.set_exam(st.session_state["exams_selected"].split("-")[0].strip())
         st.header(cls.title, divider="blue")
 
         st.subheader(f"{cls.exam_selected} - {question_number_text}{cls.num_current_question+1}")
         st.text(cls.question_text)
         st.divider()
-        answerer = st.radio(
+
+        current_question = cls.exam_handler.get_current_question_info()
+        option_selected = st.radio(
             cls.question_options_text,
             cls.question_options,
+            index=current_question["option_selected"] if current_question["option_selected"] is not None else None
         )
+
+        cls.exam_handler.set_option_selected(cls.exam_handler.get_current_question_num()
+                                             ,cls.question_options.index(option_selected)
+                                             if option_selected is not None
+                                             else None)
 
         st.markdown("#") # empty space
 
@@ -102,9 +116,6 @@ class ExamSimulator(ExcercisePage):
     title = "Exam Simulator"
     hide = True
 
-    def __init__(self):
-        pass
-
     @classmethod
     def set_exam(cls, exam):
         super().set_exam(exam)
@@ -114,18 +125,17 @@ class ExamSimulator(ExcercisePage):
     @classmethod
     def _button_row(cls):
         super()._button_row()
-        if cls.middle3.button(quit_button_text, use_container_width=True, type="tertiary"):
-            pass
+
         if cls.right.button(submit_exam_text, use_container_width=True, type="primary"):
-            pass
+            results, questions = cls.exam_handler.collect_results()
+            st.session_state["exam_results"] = results
+            st.session_state["questions_submitted"] = questions
+            st.switch_page("pages/RecapPage.py")
 
 class StandardExercise(ExcercisePage):
 
     title = "Standard Exercises"
     hide = True
-
-    def __init__(self):
-        pass
 
     @classmethod
     def set_exam(cls, exam):
@@ -133,3 +143,26 @@ class StandardExercise(ExcercisePage):
         cls.exam_handler = ExamHandler(exam)
         cls._question_formatter(cls.exam_handler.next_question())
 
+    @classmethod
+    def _button_row(cls):
+        super()._button_row()
+
+        if cls.right.button(show_correct_answare_text, use_container_width=True, type="primary"):
+            pass # TODO
+
+
+exercise_page = None
+
+@st.cache_resource
+def get_page():
+    exercise_page = None
+    if st.session_state["exercise_page_type"] == "ExamSimulator":
+        exercise_page = ExamSimulator
+    elif st.session_state["exercise_page_type"] == "StandardExercise":
+        #StandardExercise.homepage()
+        exercise_page = StandardExercise
+
+    return exercise_page
+
+if "exercise_page_type" in st.session_state.keys():
+    get_page().homepage()
