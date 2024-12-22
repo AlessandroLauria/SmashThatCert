@@ -51,8 +51,11 @@ class ExamTopicExam:
 
 class IngestQuestions:
 
-    def __init__(self):
-        self.ingest_question_conf = config_scraper.ingest_question_conf
+    def __init__(self, ingest_question_conf=None):
+        if ingest_question_conf is None:
+            self.ingest_question_conf = config_scraper.ingest_question_conf
+        else:
+            self.ingest_question_conf = ingest_question_conf
         self.mysql_conf = config_database.mysql_conf
         self.query_conf = config_database.query_conf
         self.question_info_extractor = QuestionInfoExtractor(config_scraper.question_extractor_conf)
@@ -66,7 +69,7 @@ class IngestQuestions:
         options.add_argument('headless')
         self.driver = webdriver.Chrome(options=options)
 
-    def _get_first_url(self, search):
+    def _get_first_url(self, search, link_to_search_limit=3):
         url = self.ingest_question_conf['search_engine_url']
 
         headers = {
@@ -84,6 +87,21 @@ class IngestQuestions:
 
         first_url = first_link['href']
         return first_url
+
+    def create_exams_list_table(self):
+        try:
+            query = self.query_conf["create_exam_list_table"]
+            query = query.format(dest_database=self.ingest_question_conf["database"],
+                                 dest_table_name=self.ingest_question_conf["exam_list_table"],
+                                 source_database=self.ingest_question_conf["database"],
+                                 source_table_name=self.ingest_question_conf["question_table"],
+                                 )
+            print(">> Creating exams list table")
+            print(query.strip().split(";"))
+            self.mysql.execute_actions(query.split(";"))
+        except Exception as e:
+            print(f"[ERROR] in query '{query}'")
+            print(e)
 
     def ingest_exam_questions(self):
 
@@ -115,7 +133,10 @@ class IngestQuestions:
                 print(f"[ERROR] in query '{query_template}'")
                 print(e)
 
+        self.create_exams_list_table()
+
         self.mysql.close()
+        print("DONE")
 
 
 
@@ -168,6 +189,6 @@ class QuestionInfoExtractor:
         #print(question_info)
         return question_info
 
-IngestQuestions().ingest_exam_questions()
+#IngestQuestions().ingest_exam_questions()
 #exam_topic_exam = ExamTopicExam("exam topic GCP Professional Cloud Developer question number 1")
 #exam_topic_exam.print_question_info()

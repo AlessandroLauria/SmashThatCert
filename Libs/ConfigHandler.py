@@ -17,6 +17,7 @@ class ConfigHandler:
             self.scraper_conf = _load_config(folder, "scraper_config.yaml")
             self.question_extractor_conf = self.scraper_conf['question_info_extractor']
             self.ingest_question_conf = self.scraper_conf['ingest_questions']
+            self.exam_scraping_list = self.scraper_conf['exam_scraping_list']
         elif config_type == "database":
             self.database_conf = _load_config(folder, "database_config.yaml")
             self.mysql_conf = self.database_conf['mysql']

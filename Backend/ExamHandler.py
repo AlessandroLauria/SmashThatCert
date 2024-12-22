@@ -58,20 +58,17 @@ class ExamHandler():
         self.mysql.close()
 
     def next_question(self):
-        self.current_question_index += 1
-
-        if self.current_question_index >= len(self.exam_questions):
+        if self.current_question_index + 1 >= len(self.exam_questions):
             return None #Exam ended
 
+        self.current_question_index += 1
         return self.exam_questions[self.current_question_index]
 
     def previous_question(self):
-        self.current_question_index -= 1
-
-        if self.current_question_index < 0:
-            self.current_question_index += 1
+        if self.current_question_index - 1 < 0:
             return None  # No previous questions
 
+        self.current_question_index -= 1
         return self.exam_questions[self.current_question_index]
 
     def get_total_num_questions(self):

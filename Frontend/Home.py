@@ -10,7 +10,7 @@ class Home():
     hide = False
     unique_button_clicked = -1
 
-    exams_list: list = ["exam1", "exam2", "exam3"]
+    exams_list: list = ["GCP Professional Cloud Developer", "exam2", "exam3"]
     exams_selected: str = None
 
     @classmethod
@@ -53,8 +53,10 @@ class Home():
             if exam_clicked:
                 cls.hide_page(True)
                 cls.unique_button_clicked = 0
+                st.rerun()
 
             elif exercises_clicked:
                 cls.hide_page(True)
                 cls.unique_button_clicked = 1
+                st.rerun()
 
