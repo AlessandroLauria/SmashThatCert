@@ -24,6 +24,6 @@ exam_scraping_list:
   - <<: *DEFAULT_INGESTION_INFO
     scraper: ExamTopics
     exam_name: Certified Associate Developer for Apache Spark
-    first_question_number: '15'
-    last_question_number: '40'
+    first_question_number: '1'
+    last_question_number: '187'
 

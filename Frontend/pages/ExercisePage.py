@@ -11,6 +11,16 @@ quit_button_text = "Quit"
 submit_exam_text = "Submit Exam"
 show_correct_answare_text = "Show Correct Answare"
 
+mapping_c2n = {
+    'A': 0,
+    'B': 1,
+    'C': 2,
+    'D': 3,
+    'E': 4,
+    'F': 5,
+    'G': 6,
+}
+
 class ExcercisePage():
 
     title = ""
@@ -148,7 +158,11 @@ class StandardExercise(ExcercisePage):
         super()._button_row()
 
         if cls.right.button(show_correct_answare_text, use_container_width=True, type="primary"):
-            pass # TODO
+            with st.container(border=True):
+                question = cls.exam_handler.get_current_question_info()
+                correct_answare_index = mapping_c2n[question["most_voted"]]
+                st.text(cls.question_options[correct_answare_index])
+                st.divider()
 
 
 exercise_page = None
@@ -159,7 +173,6 @@ def get_page():
     if st.session_state["exercise_page_type"] == "ExamSimulator":
         exercise_page = ExamSimulator
     elif st.session_state["exercise_page_type"] == "StandardExercise":
-        #StandardExercise.homepage()
         exercise_page = StandardExercise
 
     return exercise_page

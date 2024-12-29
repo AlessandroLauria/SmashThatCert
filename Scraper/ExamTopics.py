@@ -112,8 +112,14 @@ class IngestQuestions:
 
         print(f"Search sentence {sentence}")
         for i in range(start_num, end_num):
-            self.driver.get(self._get_first_url(sentence.format(i)))
-            current_url = self.driver.current_url
+            try:
+                self.driver.get(self._get_first_url(sentence.format(i)))
+                current_url = self.driver.current_url
+            except Exception as e:
+                print(f"[ERROR] in scraping link '{sentence.format(i)}'")
+                print(e)
+
+            query_template = 'query template not found'
             try:
                 question_info = self.question_info_extractor.question_info(self.driver)
 
