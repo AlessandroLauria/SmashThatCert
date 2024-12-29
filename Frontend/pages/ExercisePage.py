@@ -10,6 +10,7 @@ next_button_text = "Next"
 quit_button_text = "Quit"
 submit_exam_text = "Submit Exam"
 show_correct_answare_text = "Show Correct Answare"
+standard_exercises_num_quest_text = "Question number"
 
 mapping_c2n = {
     'A': 0,
@@ -36,6 +37,7 @@ class ExcercisePage():
     num_current_question = 1
     total_num_question = 1
     original_question_link = None
+    changed_number = False
 
     def __init__(self):
         pass
@@ -77,6 +79,24 @@ class ExcercisePage():
     @classmethod
     def _button_row(cls):
         cls.left, cls.middle_1, cls.middle_2, cls.middle3, cls.right = st.columns(5)
+
+        num_question_list = range(1, cls.exam_handler.get_total_num_questions() + 1)
+        current_question_num = cls.exam_handler.get_current_question_num()
+
+        def selectbox_callback():
+            cls.changed_number = True
+
+        question_selected = cls.middle_2.selectbox(standard_exercises_num_quest_text,
+                                                   num_question_list, index=current_question_num,
+                                                   label_visibility="collapsed",
+                                                   on_change=selectbox_callback)
+
+        if question_selected and cls.changed_number == True:
+            cur_question = cls.exam_handler.change_question(question_selected)
+            if cur_question is not None:
+                cls._question_formatter(cur_question)
+                cls.changed_number = False
+                st.rerun()
 
         if cls.left.button(previous_button_text, use_container_width=True, type="secondary"):
             cls._change_question(-1)

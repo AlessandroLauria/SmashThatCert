@@ -91,6 +91,13 @@ class ExamHandler():
         self.current_question_index -= 1
         return self.exam_questions[self.current_question_index]
 
+    def change_question(self, index=0):
+        if (index - 1 < 0) or (index - 1 >= len(self.exam_questions)):
+            return None
+
+        self.current_question_index = index - 1
+        return self.exam_questions[self.current_question_index]
+
     def set_option_selected(self, question_index, option_selected):
         self.exam_questions[question_index]["option_selected"] = option_selected
         print(self.exam_questions[question_index])
