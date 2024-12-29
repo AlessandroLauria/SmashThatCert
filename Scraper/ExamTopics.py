@@ -103,12 +103,12 @@ class IngestQuestions:
             print(f"[ERROR] in query '{query}'")
             print(e)
 
-    def ingest_exam_questions(self):
+    def ingest_exam_questions(self, start=None, end=None):
 
         sentence = f"examtopic {self.exam_name}" + "question number {}"
 
-        start_num = int(self.ingest_question_conf["first_question_number"])
-        end_num = int(self.ingest_question_conf["last_question_number"])+1
+        start_num = int(self.ingest_question_conf["first_question_number"]) if start is None else int(start)
+        end_num = int(self.ingest_question_conf["last_question_number"])+1 if end is None else int(end)
 
         print(f"Search sentence {sentence}")
         for i in range(start_num, end_num):

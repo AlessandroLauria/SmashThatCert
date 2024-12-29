@@ -13,9 +13,18 @@ To run che **webapp** you need to lauch this command by command line
 python -m streamlit run ./Frontend/main.py --client.showSidebarNavigation=False
 ```
 
-To run a **full ingestion** of the questions, run this command
+To run a **full ingestion** of the questions, run this command. 
 ```console
-python ./Scraper/ingest_questions.py
+python ./Scraper/ingest_questions.py --full
 ```
+This process can take a while, since there are some delays between each question and between each exam, to avoid ban from sources 
 
-All the metadata about what exams to ingest in the database and the number of question for each exam is set in the **scraper_config.yaml** file
+If you want to **ingest only a single exam**, you can do it in this way:
+```console
+python ./Scraper/ingest_questions.py --exam_id 1 --from_question 1 --to_question 10
+```
+and if you want to **specify the range** of questions you need to ingest, just add those 2 parameters at the command:
+```console
+python ./Scraper/ingest_questions.py --exam_id 1 --from_question 1 --to_question 10
+```
+All the metadata about what exams to ingest in the database and the number of question for each exam is set in the **scraper_config.yaml** file. There you can also find the exam_id related to a specific exam
