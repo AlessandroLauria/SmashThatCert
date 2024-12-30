@@ -11,4 +11,4 @@ RUN pip install -r requirements.txt
 COPY . .
 EXPOSE 8501
 HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health
-CMD [ "python", "-m","streamlit","serve","./Frontend/main.py","--client.showSidebarNavigation=False"]
+CMD [ "python", "-m","streamlit","run","./Frontend/main.py","--client.showSidebarNavigation=False"]
