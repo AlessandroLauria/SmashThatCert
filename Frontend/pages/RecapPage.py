@@ -60,7 +60,8 @@ class Recap():
         exam_results = st.session_state["exam_results"]
         questions_submitted = st.session_state["questions_submitted"]
 
-        st.markdown(f"## :green[CORRECT]: {exam_results["correct"]} - :red[ERROR]: {exam_results["error"]} - :grey[UNANSWARED]: {exam_results["unanswared"]}")
+        scores_text = f"## :green[CORRECT]: {exam_results["correct"]} - :red[ERROR]: {exam_results["error"]} - :grey[UNANSWARED]: {exam_results["unanswared"]}"
+        st.markdown(scores_text)
         cls._charts(exam_results)
 
         for question in questions_submitted:
