@@ -21,7 +21,7 @@ This process can take a while, since there are some delays between each question
 
 If you want to **ingest only a single exam**, you can do it in this way:
 ```console
-python ./Scraper/ingest_questions.py --exam_id 1 --from_question 1 --to_question 10
+python ./Scraper/ingest_questions.py --exam_id 1
 ```
 and if you want to **specify the range** of questions you need to ingest, just add those 2 parameters at the command:
 ```console
