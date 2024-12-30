@@ -28,3 +28,13 @@ and if you want to **specify the range** of questions you need to ingest, just a
 python ./Scraper/ingest_questions.py --exam_id 1 --from_question 1 --to_question 10
 ```
 All the metadata about what exams to ingest in the database and the number of question for each exam is set in the **scraper_config.yaml** file. There you can also find the exam_id related to a specific exam
+
+## Docker
+
+```console
+docker build -t smashthatcert .
+```
+
+```console
+docker run -it -p 8501:8501 -d smashthatcert
+```
