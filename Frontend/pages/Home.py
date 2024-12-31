@@ -44,6 +44,8 @@ class Home():
 
     @classmethod
     def _header(cls):
+        cls.left_col.text("Created by Alessandro Lauria")
+        cls.right_col.page_link("https://discord.gg/Xkb4maMUEb", label="Request a new exam on Discord", icon="🚀")
         st.header(title, divider="blue")
 
     @classmethod
