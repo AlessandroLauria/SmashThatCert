@@ -9,7 +9,7 @@ icon_path = os.path.join(Path(__file__).parent.parent.parent, "images", "smash_t
 def header_bar():
     left_col, middle_1_col, right = st.columns(3)
 
+    left_col.text("Created by Alessandro Lauria")
+    right.page_link("https://discord.gg/Xkb4maMUEb", label="Request a new exam on Discord", icon="🚀")
     with bottom():
-        left_col.text("Created by Alessandro Lauria")
-        right.page_link("https://discord.gg/Xkb4maMUEb", label="Request a new exam on Discord", icon="🚀")
         button(username="learnsodas", floating=False, width=500)
