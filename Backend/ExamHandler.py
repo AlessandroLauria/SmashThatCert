@@ -1,6 +1,7 @@
 import sys
 import os
 import random
+import streamlit as st
 from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent))
 from Libs.ConfigHandler import ConfigHandler
@@ -45,8 +46,8 @@ class ExamHandler():
         self._retrieve_questions()
 
     def _retrieve_questions(self):
-        self.mysql = Mysql(self.mysql_conf["database"], self.mysql_conf['user'],
-                           self.mysql_conf['password'], self.mysql_conf['host'])
+        self.mysql = Mysql(self.mysql_conf["database"], st.secrets.db_credentials.username,
+                           st.secrets.db_credentials.password, st.secrets.db_credentials.host)
 
         query = self.query_conf["read_questions_query"]\
             .format(table_name=self.mysql_conf["question_table"], exam_name=self.exam_name)
@@ -142,8 +143,8 @@ class ExamMetadata():
 
     @classmethod
     def get_exams_list(cls):
-        mysql = Mysql(cls.mysql_conf["database"], cls.mysql_conf['user'],
-                      cls.mysql_conf['password'], cls.mysql_conf['host'])
+        mysql = Mysql(cls.mysql_conf["database"], st.secrets.db_credentials.username,
+                      st.secrets.db_credentials.password, st.secrets.db_credentials.host)
 
         query = cls.query_conf["get_exam_list_query"]\
                 .format(database=cls.mysql_conf["database"],

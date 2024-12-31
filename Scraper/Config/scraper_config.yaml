@@ -29,4 +29,10 @@ exam_scraping_list:
     exam_name: Certified Associate Developer for Apache Spark
     first_question_number: '1'
     last_question_number: '187'
+  - <<: *DEFAULT_INGESTION_INFO
+    id: 3
+    scraper: ExamTopics
+    exam_name: GCP Cloud Digital Leader
+    first_question_number: '1'
+    last_question_number: '286'
 

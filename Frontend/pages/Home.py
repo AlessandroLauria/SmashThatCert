@@ -5,18 +5,10 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent.parent))
 from Backend.ExamHandler import ExamMetadata
 
-icon_path = os.path.join(Path(__file__).parent.parent.parent, "images", "smash_that_cert_icon.png")
-print(icon_path)
 title = "SMASH THAT :blue[CERT]"
 search_label = "Select your exam"
 exam_simulator_button_txt = "Exam Simulation"
 standard_exercises_button_txt = "Standard Exercises"
-
-st.set_page_config(
-    page_title="Smash That Cert",
-    page_icon=icon_path,
-    layout="wide",
-)
 
 class Home():
 
