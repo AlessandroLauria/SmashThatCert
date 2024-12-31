@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent.parent))
 from Backend.ExamHandler import ExamMetadata
+from components.Common import header_bar
 from streamlit_extras.buy_me_a_coffee import button
 
 icon_path = os.path.join(Path(__file__).parent.parent.parent, "images", "smash_that_cert_icon.png")
@@ -68,8 +69,9 @@ class Home():
     @classmethod
     def homepage(cls):
         #cls._logo()
+        header_bar()
         cls._header()
-        button(username="learnsodas", floating=True, width=221)
+
         cls._exam_selection()
 
         if cls.exams_selected is not None:

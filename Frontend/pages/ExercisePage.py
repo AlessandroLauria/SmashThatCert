@@ -9,7 +9,7 @@ previous_button_text = "Previous"
 next_button_text = "Next"
 quit_button_text = "Quit"
 submit_exam_text = "Submit Exam"
-show_correct_answare_text = "Show Correct Answare"
+show_correct_answare_text = "Show Correct Answer"
 standard_exercises_num_quest_text = "Question number"
 
 mapping_c2n = {

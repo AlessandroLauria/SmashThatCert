@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 
 title_page_text = "Recap"
 quit_button_text = "Home"
+link_button_text = "Original question"
 
 class QuestionCard():
 
@@ -32,7 +33,7 @@ class QuestionCard():
 
             st.divider()
             if self.link is not None:
-                st.page_link(self.link, label=self.link, icon="🔗")
+                st.page_link(self.link, label=link_button_text, icon="🔗")
 
 
 class Recap():
