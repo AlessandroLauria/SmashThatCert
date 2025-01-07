@@ -1,6 +1,7 @@
 import sys
 import requests
 import os
+import streamlit as st
 from pathlib import Path
 from pprint import pprint
 from bs4 import BeautifulSoup
@@ -60,8 +61,11 @@ class IngestQuestions:
         self.query_conf = config_database.query_conf
         self.question_info_extractor = QuestionInfoExtractor(config_scraper.question_extractor_conf)
 
-        self.mysql = Mysql(self.ingest_question_conf["database"], self.mysql_conf['user'],
-                           self.mysql_conf['password'], self.mysql_conf['host'])
+#       OLD METHOD WITH SECRETS EXPOSED
+#        self.mysql = Mysql(self.ingest_question_conf["database"], self.mysql_conf['user'],
+#                           self.mysql_conf['password'], self.mysql_conf['host'])
+        self.mysql = Mysql(self.mysql_conf["database"], st.secrets.db_credentials.username,
+                           st.secrets.db_credentials.password, st.secrets.db_credentials.host)
 
         self.exam_name = self.ingest_question_conf['exam_name']
 

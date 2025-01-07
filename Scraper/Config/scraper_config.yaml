@@ -35,4 +35,15 @@ exam_scraping_list:
     exam_name: GCP Cloud Digital Leader
     first_question_number: '1'
     last_question_number: '286'
-
+  - <<: *DEFAULT_INGESTION_INFO
+    id: 4
+    scraper: ExamTopics
+    exam_name: Databricks Certified Data Engineer Associate
+    first_question_number: '1'
+    last_question_number: '173'
+  - <<: *DEFAULT_INGESTION_INFO
+    id: 5
+    scraper: ExamTopics
+    exam_name: Databricks Certified Data Engineer Professional
+    first_question_number: '1'
+    last_question_number: '227'
