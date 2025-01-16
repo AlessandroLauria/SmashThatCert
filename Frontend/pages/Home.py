@@ -6,8 +6,11 @@ sys.path.append(str(Path(__file__).parent.parent.parent))
 from Backend.ExamHandler import ExamMetadata
 from components.Common import header_bar
 from streamlit_extras.buy_me_a_coffee import button
+from Libs.ConfigHandler import ConfigHandler
 
 icon_path = os.path.join(Path(__file__).parent.parent.parent, "images", "smash_that_cert_icon.png")
+main_config = ConfigHandler(os.path.join(str(Path(__file__).parent.parent.parent),"Config"), "main_config")
+
 title = "SMASH THAT :blue[CERT]"
 search_label = "Select your exam"
 exam_simulator_button_txt = "Exam Simulation"
@@ -44,7 +47,7 @@ class Home():
 
     @classmethod
     def _header(cls):
-        cls.left_col.text("Created by Alessandro Lauria")
+        cls.left_col.text(f"Created by Alessandro Lauria\nV{main_config.config['version']}")
         cls.right_col.page_link("https://discord.gg/Xkb4maMUEb", label="Request a new exam on Discord", icon="🚀")
         st.header(title, divider="blue")
 
