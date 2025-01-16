@@ -22,3 +22,5 @@ class ConfigHandler:
             self.database_conf = _load_config(folder, "database_config.yaml")
             self.mysql_conf = self.database_conf['mysql']
             self.query_conf = self.database_conf['query']
+        elif config_type == "main_config":
+            self.config = _load_config(folder, "main_config.yaml")

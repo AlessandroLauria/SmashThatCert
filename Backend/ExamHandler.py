@@ -101,7 +101,6 @@ class ExamHandler():
 
     def set_option_selected(self, question_index, option_selected):
         self.exam_questions[question_index]["option_selected"] = option_selected
-        print(self.exam_questions[question_index])
 
     def collect_results(self):
         correct = 0
@@ -142,7 +141,7 @@ class ExamMetadata():
         pass
 
     @classmethod
-    def get_exams_list(cls):
+    def _query_exams_list(cls):
         mysql = Mysql(cls.mysql_conf["database"], st.secrets.db_credentials.username,
                       st.secrets.db_credentials.password, st.secrets.db_credentials.host)
 
@@ -153,15 +152,24 @@ class ExamMetadata():
         exams_list = []
         try:
             exams_list = mysql.execute_query(query)
-            exams_list = [f"{x[0]} - total questions: {x[1]}" for x in exams_list]
         except Exception as e:
             print(f"[ERROR] in query '{query}'")
             print(e)
 
         mysql.close()
-        print(exams_list)
 
         return exams_list
+
+    @classmethod
+    def get_exams_list(cls):
+        exams_list = [f"{x[0]} - total questions: {x[1]} - last update: {x[2]}" for x in cls._query_exams_list()]
+        return exams_list
+
+    @classmethod
+    def get_exams_last_updates(cls):
+        result = {x[0]: x[2] for x in cls._query_exams_list()}
+        return result
+
 
 #ExamHandler("GCP Professional Cloud Developer")
 #ExamMetadata().get_exams_list()
