@@ -61,9 +61,6 @@ class IngestQuestions:
         self.query_conf = config_database.query_conf
         self.question_info_extractor = QuestionInfoExtractor(config_scraper.question_extractor_conf)
 
-#       OLD METHOD WITH SECRETS EXPOSED
-#        self.mysql = Mysql(self.ingest_question_conf["database"], self.mysql_conf['user'],
-#                           self.mysql_conf['password'], self.mysql_conf['host'])
         self.mysql = Mysql(self.mysql_conf["database"], st.secrets.db_credentials.username,
                            st.secrets.db_credentials.password, st.secrets.db_credentials.host)
 
@@ -78,18 +75,29 @@ class IngestQuestions:
 
         headers = {
             'Accept': '*/*',
-            'Accept-Language': 'en-US,en;q=0.5',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82',
+            'Accept-Language': 'it-IT,it;q=0.9,en-US;q=0.8,en;q=0.7',
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
         }
         parameters = {'q': search}
 
-        content = requests.get(url, headers=headers, params=parameters).text
-        soup = BeautifulSoup(content, 'html.parser')
-
+        # res = requests.get(url, headers=headers, params=parameters)
+        # print(f"STATUS CODE FIRST LINK: {res.status_code}")
+        # print(f"URL FIRST LINK: {res.url}")
+        # content = res.content
+        # print(content)
+        full_url = f"{url}?q={search}".replace(" ", "%20")
+        print(full_url)
+        self.driver.get(full_url)
+        content = self.driver.page_source
+        print(content)
+        soup = BeautifulSoup(content, 'lxml')
+        print(soup.title)
         search = soup.find(id='search')
+        print(search)
         first_link = search.find('a')
 
         first_url = first_link['href']
+        first_url = "https://www.examtopics.com/discussions/databricks/view/108118-exam-certified-associate-developer-for-apache-spark-topic-1/"
         return first_url
 
     def create_exams_list_table(self):
@@ -109,7 +117,7 @@ class IngestQuestions:
 
     def ingest_exam_questions(self, start=None, end=None):
 
-        sentence = f"examtopic {self.exam_name}" + "question number {}"
+        sentence = f"examtopic {self.exam_name}" + " question number {}"
 
         start_num = int(self.ingest_question_conf["first_question_number"]) if start is None else int(start)
         end_num = int(self.ingest_question_conf["last_question_number"])+1 if end is None else int(end)
@@ -117,7 +125,10 @@ class IngestQuestions:
         print(f"Search sentence {sentence}")
         for i in range(start_num, end_num):
             try:
-                self.driver.get(self._get_first_url(sentence.format(i)))
+                print(f"Searching url...")
+                url = self._get_first_url(sentence.format(i))
+                print(f"first url found: {url}")
+                self.driver.get(url)
                 current_url = self.driver.current_url
             except Exception as e:
                 print(f"[ERROR] in scraping link '{sentence.format(i)}'")
