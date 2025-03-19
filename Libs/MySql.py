@@ -2,16 +2,16 @@ import mysql.connector
 
 class Mysql:
 
-    def __init__(self, database, user, password, host):
+    def __init__(self, database, user, password, host, port="3306"):
         self.mysql = None
         self.database = database
-        self.conn = self._connect(user, password, host)
+        self.conn = self._connect(user, password, host, port)
 
         self.execute_actions_progress = 0.0
 
-    def _connect(self, user, password, host):
+    def _connect(self, user, password, host, port):
         return mysql.connector.connect(user=user, password=password,
-                                       host=host,
+                                       host=host, port=port,
                                        database=self.database)
 
     def close(self):
