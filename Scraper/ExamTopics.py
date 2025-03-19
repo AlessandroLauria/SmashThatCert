@@ -65,7 +65,8 @@ class IngestQuestions:
 #        self.mysql = Mysql(self.ingest_question_conf["database"], self.mysql_conf['user'],
 #                           self.mysql_conf['password'], self.mysql_conf['host'])
         self.mysql = Mysql(self.mysql_conf["database"], st.secrets.db_credentials.username,
-                           st.secrets.db_credentials.password, st.secrets.db_credentials.host)
+                           st.secrets.db_credentials.password, st.secrets.db_credentials.host,
+                          st.secrets.db_credentials.port)
 
         self.exam_name = self.ingest_question_conf['exam_name']
 
