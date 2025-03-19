@@ -47,7 +47,8 @@ class ExamHandler():
 
     def _retrieve_questions(self):
         self.mysql = Mysql(self.mysql_conf["database"], st.secrets.db_credentials.username,
-                           st.secrets.db_credentials.password, st.secrets.db_credentials.host)
+                           st.secrets.db_credentials.password, st.secrets.db_credentials.host,
+                          st.secrets.db_credentials.port)
 
         query = self.query_conf["read_questions_query"]\
             .format(table_name=self.mysql_conf["question_table"], exam_name=self.exam_name)
