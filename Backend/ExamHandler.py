@@ -144,7 +144,8 @@ class ExamMetadata():
     @classmethod
     def _query_exams_list(cls):
         mysql = Mysql(cls.mysql_conf["database"], st.secrets.db_credentials.username,
-                      st.secrets.db_credentials.password, st.secrets.db_credentials.host)
+                      st.secrets.db_credentials.password, st.secrets.db_credentials.host,
+                     st.secrets.db_credentials.port)
 
         query = cls.query_conf["get_exam_list_query"]\
                 .format(database=cls.mysql_conf["database"],
