@@ -4,6 +4,7 @@ ingest_questions: &DEFAULT_INGESTION_INFO
   question_table: exams_questions
   exam_list_table: exams_list
   search_engine_url: https://www.googleapis.com/customsearch/v1?q={search_string}&key={api_key}&cx={cx}
+  path_substring_check:
   exam_name: GCP Professional Cloud Developer
   first_question_number: '1'
   last_question_number: '3'
@@ -22,29 +23,34 @@ exam_scraping_list:
     id: 1
     scraper: ExamTopics
     exam_name: GCP Professional Cloud Developer
+    path_substring_check: exam-professional-cloud-developer
     first_question_number: '1'
     last_question_number: '322'
   - <<: *DEFAULT_INGESTION_INFO
     id: 2
     scraper: ExamTopics
-    exam_name: Certified Associate Developer for Apache Spark
+    exam_name: Databricks Certified Associate Developer for Apache Spark
+    path_substring_check: exam-certified-associate-developer-for-apache-spark
     first_question_number: '1'
     last_question_number: '187'
   - <<: *DEFAULT_INGESTION_INFO
     id: 3
     scraper: ExamTopics
     exam_name: GCP Cloud Digital Leader
+    path_substring_check: exam-cloud-digital-leader
     first_question_number: '1'
     last_question_number: '286'
   - <<: *DEFAULT_INGESTION_INFO
     id: 4
     scraper: ExamTopics
     exam_name: Databricks Certified Data Engineer Associate
+    path_substring_check: exam-certified-data-engineer-associate
     first_question_number: '1'
     last_question_number: '173'
   - <<: *DEFAULT_INGESTION_INFO
     id: 5
     scraper: ExamTopics
     exam_name: Databricks Certified Data Engineer Professional
+    path_substring_check: exam-certified-data-engineer-professional
     first_question_number: '1'
     last_question_number: '227'

@@ -87,14 +87,18 @@ class IngestQuestions:
 
             try:
                 urls_found = [item["link"] for item in res.json()["items"]]
-                urls_found = urls_found[:link_to_search_limit]
+                print(urls_found)
+                print(f'path_substring_check: {self.ingest_question_conf["path_substring_check"]}')
+                urls_found = [url for url in urls_found if self.ingest_question_conf["path_substring_check"] in url]
+                print(urls_found)
+                #urls_found = urls_found[:link_to_search_limit]
                 if res.status_code == 200:
                     break
             except Exception as e:
                 print(f"[ERROR] in _get_first_url() method")
                 print(e)
 
-        return urls_found[:link_to_search_limit]
+        return urls_found #[:link_to_search_limit]
 
     def create_exams_list_table(self):
         try:
