@@ -3,11 +3,11 @@ ingest_questions: &DEFAULT_INGESTION_INFO
   database: smash_that_cert
   question_table: exams_questions
   exam_list_table: exams_list
-  search_engine_url: https://www.google.com/search
+  search_engine_url: https://www.googleapis.com/customsearch/v1?q={search_string}&key={api_key}&cx={cx}
   exam_name: GCP Professional Cloud Developer
   first_question_number: '1'
   last_question_number: '3'
-  update_delay_days: 15 # when full ingestion performed, it will scrape the exam only if this number of day is passed between the last scraping
+  update_delay_days: 30 # when full ingestion performed, it will scrape the exam only if this number of day is passed between the last scraping
   scraper: ExamTopics
 
 question_info_extractor:

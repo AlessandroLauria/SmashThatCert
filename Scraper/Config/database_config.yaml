@@ -1,7 +1,4 @@
 mysql:
-  user:
-  password:
-  host:
   database: smash_that_cert
   question_table: exams_questions
   exam_list_table: exams_list

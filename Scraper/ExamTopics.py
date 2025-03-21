@@ -61,9 +61,6 @@ class IngestQuestions:
         self.query_conf = config_database.query_conf
         self.question_info_extractor = QuestionInfoExtractor(config_scraper.question_extractor_conf)
 
-#       OLD METHOD WITH SECRETS EXPOSED
-#        self.mysql = Mysql(self.ingest_question_conf["database"], self.mysql_conf['user'],
-#                           self.mysql_conf['password'], self.mysql_conf['host'])
         self.mysql = Mysql(self.mysql_conf["database"], st.secrets.db_credentials.username,
                            st.secrets.db_credentials.password, st.secrets.db_credentials.host,
                           st.secrets.db_credentials.port)
@@ -77,21 +74,27 @@ class IngestQuestions:
     def _get_first_url(self, search, link_to_search_limit=3):
         url = self.ingest_question_conf['search_engine_url']
 
-        headers = {
-            'Accept': '*/*',
-            'Accept-Language': 'en-US,en;q=0.5',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82',
-        }
-        parameters = {'q': search}
+        # cause daily quota limit in api usage we need to round robin between multiple api keys
+        api_keys = list(st.secrets.google_search_api_keys[0].values())
 
-        content = requests.get(url, headers=headers, params=parameters).text
-        soup = BeautifulSoup(content, 'html.parser')
+        urls_found = []
+        for key in api_keys:
+            full_url = url.format(search_string=search,
+                                  api_key=key,
+                                  cx=st.secrets.google_search_api.cx).replace(" ", "%20")
+            res = requests.get(full_url)
+            print(f"STATUS CODE GOOGLE SEARCH LINK: {res.status_code}")
 
-        search = soup.find(id='search')
-        first_link = search.find('a')
+            try:
+                urls_found = [item["link"] for item in res.json()["items"]]
+                urls_found = urls_found[:link_to_search_limit]
+                if res.status_code == 200:
+                    break
+            except Exception as e:
+                print(f"[ERROR] in _get_first_url() method")
+                print(e)
 
-        first_url = first_link['href']
-        return first_url
+        return urls_found[:link_to_search_limit]
 
     def create_exams_list_table(self):
         try:
@@ -110,39 +113,52 @@ class IngestQuestions:
 
     def ingest_exam_questions(self, start=None, end=None):
 
-        sentence = f"examtopic {self.exam_name}" + "question number {}"
+        sentence = f"examtopic {self.exam_name}" + " question number {}"
 
         start_num = int(self.ingest_question_conf["first_question_number"]) if start is None else int(start)
         end_num = int(self.ingest_question_conf["last_question_number"])+1 if end is None else int(end)
 
         print(f"Search sentence {sentence}")
         for i in range(start_num, end_num):
-            try:
-                self.driver.get(self._get_first_url(sentence.format(i)))
-                current_url = self.driver.current_url
-            except Exception as e:
-                print(f"[ERROR] in scraping link '{sentence.format(i)}'")
-                print(e)
+            urls_found = self._get_first_url(sentence.format(i))
+            print("urls_found", urls_found)
+            for url in urls_found:
+                scraped = True
+                try:
+                    # print(f"Searching url...")
+                    # url = self._get_first_url(sentence.format(i))
+                    print(f"first url found: {url}")
+                    self.driver.get(url)
+                    current_url = self.driver.current_url
+                except Exception as e:
+                    scraped = False
+                    print(f"[ERROR] in scraping link '{sentence.format(i)}'")
+                    print(e)
 
-            query_template = 'query template not found'
-            try:
-                question_info = self.question_info_extractor.question_info(self.driver)
+                query_template = 'query template not found'
+                try:
+                    question_info = self.question_info_extractor.question_info(self.driver)
 
-                query_template = self.query_conf['ingest_question_query']
-                query_template = query_template.format(table_name=self.ingest_question_conf["question_table"],
-                                                       exam_name=self.exam_name,
-                                                       question_number=i,
-                                                       question_text=question_info['question_text'].replace("'", "").replace('"', '').replace('\\', '/'),
-                                                       question_options="$$$".join(question_info['question_options']).replace("'", "").replace('"', '').replace('\\', '/'),
-                                                       most_voted=question_info['most_voted'],
-                                                       link=current_url
-                                                       )
+                    query_template = self.query_conf['ingest_question_query']
+                    query_template = query_template.format(table_name=self.ingest_question_conf["question_table"],
+                                                           exam_name=self.exam_name,
+                                                           question_number=i,
+                                                           question_text=question_info['question_text'].replace("'", "").replace('"', '').replace('\\', '/'),
+                                                           question_options="$$$".join(question_info['question_options']).replace("'", "").replace('"', '').replace('\\', '/'),
+                                                           most_voted=question_info['most_voted'],
+                                                           link=current_url
+                                                           )
 
-                self.mysql.execute_actions([query_template])
-                print(f"- Ingested question {i} of exam '{self.exam_name}'")
-            except Exception as e:
-                print(f"[ERROR] in query '{query_template}'")
-                print(e)
+                    self.mysql.execute_actions([query_template])
+                    print(f"- Ingested question {i} of exam '{self.exam_name}'")
+                except Exception as e:
+                    scraped = True
+                    print(f"[ERROR] in query '{query_template}'")
+                    print(e)
+
+                if scraped:
+                    print(f"> correctly scraped {sentence.format(i)}")
+                    break
 
         self.create_exams_list_table()
 
